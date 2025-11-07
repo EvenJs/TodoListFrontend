@@ -13,14 +13,22 @@ const TodoForm = ({ onSubmit, loading = false }: TodoFormProps) => {
     title: "",
     description: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title.trim()) return;
-
-    onSubmit(formData.title, formData.description);
-    setFormData({ title: "", description: "" });
-    setIsExpanded(false);
+    if (!formData.title.trim() || isSubmitting) return;
+    try {
+      setIsSubmitting(true);
+      onSubmit(formData.title, formData.description);
+      setFormData({ title: "", description: "" });
+      setIsExpanded(false);
+    } catch (error) {
+      // Error is handled by the parent component
+      console.error("Error creating todo:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {

@@ -14,7 +14,7 @@ const TodoStats = ({ todos }: TodoStatsProps) => {
       .length,
     inProgress: todos.filter((todo) => todo.status === TASK_STATUS.IN_PROGRESS)
       .length,
-    pending: todos.filter((todo) => todo.status === TASK_STATUS.NOT_STARTED)
+    notStarted: todos.filter((todo) => todo.status === TASK_STATUS.NOT_STARTED)
       .length,
   };
 
@@ -29,11 +29,11 @@ const TodoStats = ({ todos }: TodoStatsProps) => {
       bgColor: "bg-gray-100",
     },
     {
-      label: "Completed",
-      value: stats.completed,
-      icon: CheckCircle,
-      color: "text-success-600",
-      bgColor: "bg-success-100",
+      label: "Not Started",
+      value: stats.notStarted,
+      icon: Clock,
+      color: "text-warning-600",
+      bgColor: "bg-warning-100",
     },
     {
       label: "In Progress",
@@ -43,11 +43,11 @@ const TodoStats = ({ todos }: TodoStatsProps) => {
       bgColor: "bg-primary-100",
     },
     {
-      label: "Pending",
-      value: stats.pending,
-      icon: Clock,
-      color: "text-warning-600",
-      bgColor: "bg-warning-100",
+      label: "Completed",
+      value: stats.completed,
+      icon: CheckCircle,
+      color: "text-success-600",
+      bgColor: "bg-success-100",
     },
   ];
 

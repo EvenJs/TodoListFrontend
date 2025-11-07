@@ -8,7 +8,7 @@ export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
 
 
 export interface Task {
-  _id: string;
+  _id?: string;
   title: string;
   status: TaskStatus;
   description: string;
@@ -25,4 +25,11 @@ export interface StatusConfig {
   label: string;
   color: string;
   icon: string;
+}
+
+export interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }

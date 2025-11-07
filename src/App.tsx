@@ -9,6 +9,7 @@ import TodoStats from "./components/TodoStats";
 
 function App() {
   const { todos, loading, addTodo } = useTodos();
+  const [filter, setFilter] = useState<string>("all");
 
   const handleAddTodo = (title, description) => {
     addTodo(title, description);
@@ -84,7 +85,7 @@ function App() {
             <AnimatePresence mode="popLayout">
               {todos.map((todo) => (
                 <TodoItem
-                  key={todo.id}
+                  key={todo._id}
                   todo={todo}
                   onUpdate={handleUpdateTodo}
                   onDelete={handleDeleteTodo}
