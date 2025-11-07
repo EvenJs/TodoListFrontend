@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  frontend:
+    build: .
+    container_name: todo-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://todo-backend:4000
+    networks:
+      - todo-network
+
+networks:
+  todo-network:
+    external: true
