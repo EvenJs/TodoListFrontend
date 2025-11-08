@@ -5,12 +5,12 @@ export interface NewTodo {
   title: string;
   status: TodoStatus;
   description: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 export interface ExistingTodo extends NewTodo {
-  _id: string; // required once saved
+  _id: string;
+  createdAt: string;
+  updatedAt?: string;
 }
 export interface TodoFormData {
   title: string;

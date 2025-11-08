@@ -2,25 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2, Check, Clock, Play, Save, X } from "lucide-react";
 import { STATUS_CONFIG, TODO_STATUS } from "../constants/todo";
-import {
-  type ExistingTodo,
-  type TodoStatus,
-  type TodoFormData,
-} from "../types/todo";
+import { type ExistingTodo, type TodoStatus } from "../types/todo";
+import { useTodoContext } from "../contexts/TodoContext";
 
 interface TodoItemProps {
   todo: ExistingTodo;
-  onUpdate: (id: string, updates: Partial<TodoFormData>) => void;
-  onDelete: (id: string) => void;
-  onStatusUpdate: (id: string, status: TodoStatus) => void;
 }
 
-const TodoItem = ({
-  todo,
-  onUpdate,
-  onDelete,
-  onStatusUpdate,
-}: TodoItemProps) => {
+const TodoItem = ({ todo }: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [editData, setEditData] = useState({
@@ -28,10 +17,11 @@ const TodoItem = ({
     description: todo.description || "",
   });
 
+  const { updateTodo, deleteTodo, updateTodoStatus } = useTodoContext();
   const statusConfig = STATUS_CONFIG[todo.status];
 
   const handleSave = () => {
-    onUpdate(todo._id, editData);
+    updateTodo(todo._id, editData);
     setIsEditing(false);
   };
 
@@ -43,26 +33,20 @@ const TodoItem = ({
     setIsEditing(false);
   };
 
-  const handleStatusUpdate = async () => {
-    if (isUpdatingStatus) return; // Prevent multiple clicks
+  // const handleStatusUpdate = async () => {
+  //   if (isUpdatingStatus) return; // Prevent multiple clicks
 
-    const nextStatus = getNextStatus(todo.status);
-    console.log("🔄 Updating status:", {
-      current: todo.status,
-      next: nextStatus,
-      todoId: todo._id,
-    });
+  //   const nextStatus = getNextStatus(todo.status);
 
-    setIsUpdatingStatus(true);
-    try {
-      await onStatusUpdate(todo._id, nextStatus);
-      console.log("✅ Status update successful");
-    } catch (error) {
-      console.error("❌ Status update failed:", error);
-    } finally {
-      setIsUpdatingStatus(false);
-    }
-  };
+  //   setIsUpdatingStatus(true);
+  //   try {
+  //     onStatusUpdate(todo._id, nextStatus);
+  //   } catch (error) {
+  //     console.error("❌ Status update failed:", error);
+  //   } finally {
+  //     setIsUpdatingStatus(false);
+  //   }
+  // };
 
   const getStatusIcon = (status: TodoStatus) => {
     switch (status) {
@@ -87,6 +71,26 @@ const TodoItem = ({
         return TODO_STATUS.NOT_STARTED;
       default:
         return TODO_STATUS.NOT_STARTED;
+    }
+  };
+
+  const handleStatusUpdate = async () => {
+    if (isUpdatingStatus) return;
+
+    const nextStatus = getNextStatus(todo.status);
+    setIsUpdatingStatus(true);
+    try {
+      await updateTodoStatus(todo._id, nextStatus);
+    } catch (error) {
+      console.error("Status update failed:", error);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      deleteTodo(todo._id);
     }
   };
 
@@ -218,7 +222,7 @@ const TodoItem = ({
                 if (
                   window.confirm("Are you sure you want to delete this task?")
                 ) {
-                  onDelete(todo._id);
+                  handleDelete();
                 }
               }}
               className="btn-ghost p-2 rounded-lg text-gray-500 hover:text-red-600"

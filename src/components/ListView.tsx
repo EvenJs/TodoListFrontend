@@ -1,39 +1,31 @@
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  type ExistingTodo,
-  type TodoFormData,
-  type TodoStatus,
-  type PaginationInfo,
-} from "../types/todo";
+import { type ExistingTodo, type PaginationInfo } from "../types/todo";
 import TodoItem from "./TodoItem";
 import TodoFilter from "./TodoFilter";
 import Pagination from "./Pagination";
+import { useTodoContext } from "../contexts/TodoContext";
 
 interface ListViewProps {
-  todos: ExistingTodo[];
   filteredTodos: ExistingTodo[];
   filter: string;
   pagination: PaginationInfo;
   loading: boolean;
-  onUpdate: (id: string, updates: Partial<TodoFormData>) => void;
-  onDelete: (id: string) => void;
-  onStatusUpdate: (id: string, status: TodoStatus) => void;
   onFilterChange: (filter: string) => void;
-  onPageChange: (page: number) => void;
 }
 
 const ListView = ({
-  todos,
   filteredTodos,
   filter,
   pagination,
   loading,
-  onUpdate,
-  onDelete,
-  onStatusUpdate,
   onFilterChange,
-  onPageChange,
 }: ListViewProps) => {
+  const { todos, changePage } = useTodoContext();
+
+  const handlePageChange = (page: number) => {
+    changePage(page);
+  };
+
   return (
     <>
       {/* Filters */}
@@ -49,13 +41,7 @@ const ListView = ({
       <div className="space-y-4">
         <AnimatePresence mode="popLayout">
           {filteredTodos.map((todo) => (
-            <TodoItem
-              key={todo._id}
-              todo={todo}
-              onUpdate={onUpdate}
-              onDelete={onDelete}
-              onStatusUpdate={onStatusUpdate}
-            />
+            <TodoItem key={todo._id} todo={todo} />
           ))}
         </AnimatePresence>
 
@@ -83,7 +69,7 @@ const ListView = ({
       {!loading && pagination.total > 0 && (
         <Pagination
           pagination={pagination}
-          onPageChange={onPageChange}
+          onPageChange={handlePageChange}
           loading={loading}
         />
       )}

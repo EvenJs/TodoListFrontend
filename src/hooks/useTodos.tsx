@@ -121,8 +121,10 @@ export const useTodos = (): UseTodos => {
     try {
       await todoApiService.updateTodo(id, todoData);
       await fetchTodos(); // Refresh the list
-    } catch (err) {
-      throw new Error(err.response?.data?.error || "Failed to update todo");
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update todo";
+      throw new Error(errorMessage);
     }
   };
 
@@ -152,8 +154,10 @@ export const useTodos = (): UseTodos => {
     try {
       await todoApiService.deleteTodo(id);
       await fetchTodos(); // Refresh the list
-    } catch (err) {
-      throw new Error(err.response?.data?.error || "Failed to delete todo");
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete todo";
+      throw new Error(errorMessage);
     }
   };
 

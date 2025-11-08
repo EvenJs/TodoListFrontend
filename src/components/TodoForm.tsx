@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, X } from "lucide-react";
+import { useTodoContext } from "../contexts/TodoContext";
 
-interface TodoFormProps {
-  onSubmit: (title: string, description: string) => void;
-  loading?: boolean;
-  onCancel?: () => void;
-}
-
-const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
+const TodoForm = () => {
+  const { addTodo } = useTodoContext();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -21,7 +17,7 @@ const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
     if (!formData.title.trim() || isSubmitting) return;
     try {
       setIsSubmitting(true);
-      onSubmit(formData.title, formData.description);
+      addTodo(formData.title, formData.description);
       setFormData({ title: "", description: "" });
       setIsExpanded(false);
     } catch (error) {
@@ -46,9 +42,10 @@ const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             onClick={() => setIsExpanded(true)}
-            className="w-full todo-card group hover:bg-white/80 cursor-pointer"
+            disabled={isSubmitting}
+            className="w-full todo-card group hover:bg-white/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="flex items-center justify-center gap-3 text-gray-500 group-hover:text-primary-600 transition-colors">
+            <div className="flex items-center justify-center gap-3 text-gray-500 group-hover:text-blue-600 transition-colors">
               <Plus className="w-6 h-6" />
               <span className="text-lg font-semibold">Add New Task</span>
             </div>
@@ -64,7 +61,11 @@ const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
               <h3 className="text-xl font-bold text-gray-900">
                 Create New Task
               </h3>
-              <button onClick={resetForm} className="btn-ghost p-2 rounded-lg">
+              <button
+                onClick={resetForm}
+                disabled={isSubmitting}
+                className="btn-ghost p-2 rounded-lg disabled:opacity-50"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -80,10 +81,11 @@ const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
-                  className="input-field"
+                  className="input-field disabled:opacity-50"
                   placeholder="What needs to be done?"
                   autoFocus
                   required
+                  disabled={isSubmitting}
                 />
               </div>
 
@@ -96,30 +98,40 @@ const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="input-field resize-none"
+                  className="input-field resize-none disabled:opacity-50"
                   rows={3}
                   placeholder="Add some details (optional)"
+                  disabled={isSubmitting}
                 />
               </div>
 
               <div className="flex gap-3 pt-2">
                 <button
                   type="submit"
-                  disabled={!formData.title.trim()}
-                  className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  disabled={!formData.title.trim() || isSubmitting}
+                  className="btn btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Task
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Task
+                    </>
+                  )}
                 </button>
-                {onCancel && (
-                  <button
-                    type="button"
-                    onClick={onCancel}
-                    className="btn btn-ghost"
-                  >
-                    Cancel
-                  </button>
-                )}
+
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  disabled={isSubmitting}
+                  className="btn btn-ghost disabled:opacity-50"
+                >
+                  Cancel
+                </button>
               </div>
             </form>
           </motion.div>

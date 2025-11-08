@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
 import { type ExistingTodo, type TodoStatus } from "../types/todo";
 import KanbanCard from "./KanbanCard";
 import { KANBAN_COLUMNS, TODO_STATUS } from "../constants/todo";
@@ -39,22 +38,7 @@ const KanbanColumn = ({
             <h3 className="font-semibold text-gray-900">
               {columnConfig.title}
             </h3>
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-medium ${columnConfig.textColor} ${columnConfig.bgColor}`}
-            >
-              {todos.length}
-            </span>
           </div>
-
-          {onCreateTodo && status !== TODO_STATUS.COMPLETED && (
-            <button
-              onClick={() => onCreateTodo(status)}
-              className="p-1 rounded-lg hover:bg-white transition-colors"
-              title={`Add task to ${columnConfig.title}`}
-            >
-              <Plus className="w-4 h-4 text-gray-500" />
-            </button>
-          )}
         </div>
       </div>
 

@@ -1,30 +1,17 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useTodoContext } from "../contexts/TodoContext";
 import { type ExistingTodo, type TodoStatus } from "../types/todo";
 import KanbanColumn from "./KanbanColumn";
 import TodoForm from "./TodoForm";
 import { KANBAN_COLUMNS, TODO_STATUS } from "../constants/todo";
 
 interface KanbanViewProps {
-  todos: ExistingTodo[];
-  onUpdate: (
-    id: string,
-    updates: Partial<{ title: string; description: string }>
-  ) => void;
-  onDelete: (id: string) => void;
-  onStatusChange: (id: string, status: TodoStatus) => void;
-  onCreateTodo: (title: string, description: string) => void;
   loading?: boolean;
 }
 
-const KanbanView = ({
-  todos,
-  onUpdate,
-  onDelete,
-  onStatusChange,
-  onCreateTodo,
-  loading = false,
-}: KanbanViewProps) => {
+const KanbanView = ({ loading = false }: KanbanViewProps) => {
+  const { todos, updateTodo, deleteTodo, updateTodoStatus } = useTodoContext();
   const [editingTodo, setEditingTodo] = useState<ExistingTodo | null>(null);
   const [quickCreateStatus, setQuickCreateStatus] = useState<TodoStatus | null>(
     null
@@ -51,17 +38,20 @@ const KanbanView = ({
     id: string,
     updates: Partial<{ title: string; description: string }>
   ) => {
-    onUpdate(id, updates);
+    updateTodo(id, updates);
     setEditingTodo(null);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteTodo(id);
+  };
+
+  const handleStatusChange = (id: string, status: TodoStatus) => {
+    updateTodoStatus(id, status);
   };
 
   const handleQuickCreate = (status: TodoStatus) => {
     setQuickCreateStatus(status);
-  };
-
-  const handleCreateTodo = (title: string, description: string) => {
-    onCreateTodo(title, description);
-    setQuickCreateStatus(null);
   };
 
   const handleCancelCreate = () => {
@@ -147,10 +137,7 @@ const KanbanView = ({
                 ✕
               </button>
             </div>
-            <TodoForm
-              onSubmit={handleCreateTodo}
-              onCancel={handleCancelCreate}
-            />
+            <TodoForm />
           </div>
         </div>
       )}
@@ -176,8 +163,8 @@ const KanbanView = ({
             status={TODO_STATUS.NOT_STARTED}
             todos={todosByStatus[TODO_STATUS.NOT_STARTED]}
             onEdit={handleEdit}
-            onDelete={onDelete}
-            onStatusChange={onStatusChange}
+            onDelete={handleDelete}
+            onStatusChange={handleStatusChange}
             onCreateTodo={handleQuickCreate}
           />
 
@@ -185,8 +172,8 @@ const KanbanView = ({
             status={TODO_STATUS.IN_PROGRESS}
             todos={todosByStatus[TODO_STATUS.IN_PROGRESS]}
             onEdit={handleEdit}
-            onDelete={onDelete}
-            onStatusChange={onStatusChange}
+            onDelete={handleDelete}
+            onStatusChange={handleStatusChange}
             onCreateTodo={handleQuickCreate}
           />
 
@@ -194,8 +181,8 @@ const KanbanView = ({
             status={TODO_STATUS.COMPLETED}
             todos={todosByStatus[TODO_STATUS.COMPLETED]}
             onEdit={handleEdit}
-            onDelete={onDelete}
-            onStatusChange={onStatusChange}
+            onDelete={handleDelete}
+            onStatusChange={handleStatusChange}
           />
         </motion.div>
       )}
