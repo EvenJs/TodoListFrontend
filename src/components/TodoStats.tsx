@@ -1,23 +1,12 @@
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, PlayCircle } from "lucide-react";
-import { TODO_STATUS } from "../constants/todo";
-import type { Todo } from "../types/todo";
+import { type TodoStats as TodoStatsType } from "../types/todo";
 
 interface TodoStatsProps {
-  todos: Todo[];
+  stats: TodoStatsType;
 }
 
-const TodoStats = ({ todos }: TodoStatsProps) => {
-  const stats = {
-    total: todos.length,
-    completed: todos.filter((todo) => todo.status === TODO_STATUS.COMPLETED)
-      .length,
-    inProgress: todos.filter((todo) => todo.status === TODO_STATUS.IN_PROGRESS)
-      .length,
-    notStarted: todos.filter((todo) => todo.status === TODO_STATUS.NOT_STARTED)
-      .length,
-  };
-
+const TodoStats = ({ stats }: TodoStatsProps) => {
   const progress = stats.total > 0 ? (stats.completed / stats.total) * 100 : 0;
 
   const statCards = [

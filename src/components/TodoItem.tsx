@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2, Check, Clock, Play, Save, X } from "lucide-react";
 import { STATUS_CONFIG, TODO_STATUS } from "../constants/todo";
-import { type Todo, TodoStatus, type TodoFormData } from "../types/todo";
+import { type Todo, type TodoStatus, type TodoFormData } from "../types/todo";
 
 interface TodoItemProps {
   todo: Todo;
@@ -18,9 +18,10 @@ const TodoItem = ({
   onStatusUpdate,
 }: TodoItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [editData, setEditData] = useState({
     title: todo.title,
-    description: todo.description,
+    description: todo.description || "",
   });
 
   const statusConfig = STATUS_CONFIG[todo.status];
@@ -33,18 +34,39 @@ const TodoItem = ({
   const handleCancel = () => {
     setEditData({
       title: todo.title,
-      description: todo.description,
+      description: todo.description || "",
     });
     setIsEditing(false);
   };
 
+  const handleStatusUpdate = async () => {
+    if (isUpdatingStatus) return; // Prevent multiple clicks
+
+    const nextStatus = getNextStatus(todo.status);
+    console.log("🔄 Updating status:", {
+      current: todo.status,
+      next: nextStatus,
+      todoId: todo._id,
+    });
+
+    setIsUpdatingStatus(true);
+    try {
+      await onStatusUpdate(todo._id, nextStatus);
+      console.log("✅ Status update successful");
+    } catch (error) {
+      console.error("❌ Status update failed:", error);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
   const getStatusIcon = (status: TodoStatus) => {
     switch (status) {
-      case TodoStatus.NOT_STARTED:
+      case TODO_STATUS.NOT_STARTED:
         return <Clock className="w-3 h-3" />;
-      case TodoStatus.IN_PROGRESS:
+      case TODO_STATUS.IN_PROGRESS:
         return <Play className="w-3 h-3" />;
-      case TodoStatus.COMPLETED:
+      case TODO_STATUS.COMPLETED:
         return <Check className="w-3 h-3" />;
       default:
         return <Clock className="w-3 h-3" />;
@@ -53,14 +75,14 @@ const TodoItem = ({
 
   const getNextStatus = (currentStatus: TodoStatus): TodoStatus => {
     switch (currentStatus) {
-      case TodoStatus.NOT_STARTED:
-        return TodoStatus.IN_PROGRESS;
-      case TodoStatus.IN_PROGRESS:
-        return TodoStatus.COMPLETED;
-      case TodoStatus.COMPLETED:
-        return TodoStatus.NOT_STARTED;
+      case TODO_STATUS.NOT_STARTED:
+        return TODO_STATUS.IN_PROGRESS;
+      case TODO_STATUS.IN_PROGRESS:
+        return TODO_STATUS.COMPLETED;
+      case TODO_STATUS.COMPLETED:
+        return TODO_STATUS.NOT_STARTED;
       default:
-        return TodoStatus.NOT_STARTED;
+        return TODO_STATUS.NOT_STARTED;
     }
   };
 
@@ -118,18 +140,19 @@ const TodoItem = ({
             <>
               <div className="flex items-start gap-3 mb-3">
                 <button
-                  onClick={() =>
-                    onStatusUpdate(todo._id, getNextStatus(todo.status))
-                  }
-                  className={`flex-shrink-0 w-6 h-6 rounded-full border-2 mt-1 transition-all duration-200 hover:scale-110 ${
+                  onClick={handleStatusUpdate}
+                  disabled={isUpdatingStatus}
+                  className={`flex-shrink-0 w-6 h-6 rounded-full border-2 mt-1 transition-all duration-200 hover:scale-110 flex items-center justify-center ${
                     todo.status === TODO_STATUS.COMPLETED
-                      ? "bg-success-500 border-success-500 text-white"
-                      : "border-gray-300 hover:border-primary-500"
-                  }`}
+                      ? "bg-green-500 border-green-500 text-white"
+                      : "border-gray-300 hover:border-blue-500"
+                  } ${isUpdatingStatus ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
-                  {todo.status === TODO_STATUS.COMPLETED && (
-                    <Check className="w-3 h-3 mx-auto" />
-                  )}
+                  {isUpdatingStatus ? (
+                    <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : todo.status === TODO_STATUS.COMPLETED ? (
+                    <Check className="w-3 h-3" />
+                  ) : null}
                 </button>
 
                 <div className="flex-1 min-w-0">
@@ -178,7 +201,7 @@ const TodoItem = ({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsEditing(true)}
-              className="btn-ghost p-2 rounded-lg text-gray-500 hover:text-primary-600"
+              className="btn-ghost p-2 rounded-lg text-gray-500 hover:text-blue-600"
               title="Edit task"
             >
               <Edit3 className="w-4 h-4" />

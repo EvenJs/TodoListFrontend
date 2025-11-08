@@ -1,14 +1,24 @@
 import { motion } from "framer-motion";
 import { Filter } from "lucide-react";
-import { TodoStatus } from "../types/todo";
-import { STATUS_OPTIONS } from "../constants/todo";
+import { STATUS_OPTIONS, TODO_STATUS } from "../constants/todo";
 
 interface TodoFilterProps {
   filter: string;
   onFilterChange: (filter: string) => void;
+  loading?: boolean;
 }
 
-const TodoFilter = ({ filter, onFilterChange }: TodoFilterProps) => {
+const TodoFilter = ({
+  filter,
+  onFilterChange,
+  loading = false,
+}: TodoFilterProps) => {
+  const handleFilterChange = (newFilter: string) => {
+    if (!loading) {
+      onFilterChange(newFilter);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -35,13 +45,13 @@ const TodoFilter = ({ filter, onFilterChange }: TodoFilterProps) => {
         {STATUS_OPTIONS.map((option) => (
           <button
             key={option.value}
-            onClick={() => onFilterChange(option.value)}
+            onClick={() => handleFilterChange(option.value)}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
               filter === option.value
                 ? `${
-                    option.value === TodoStatus.NOT_STARTED
+                    option.value === TODO_STATUS.NOT_STARTED
                       ? "bg-amber-100 text-amber-600 border-amber-200"
-                      : option.value === TodoStatus.IN_PROGRESS
+                      : option.value === TODO_STATUS.IN_PROGRESS
                       ? "bg-blue-100 text-blue-600 border-blue-200"
                       : "bg-green-100 text-green-600 border-green-200"
                   } shadow-md`

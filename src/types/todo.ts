@@ -1,10 +1,4 @@
-export const TodoStatus = {
-  NOT_STARTED: "not_started",
-  IN_PROGRESS: "in_progress",
-  COMPLETED: "completed",
-} as const;
-
-export type TodoStatus = typeof TodoStatus[keyof typeof TodoStatus];
+export type TodoStatus = 'not_started' | 'in_progress' | 'completed';
 
 
 export interface Todo {
@@ -27,9 +21,33 @@ export interface StatusConfig {
   icon: string;
 }
 
+export interface TodoStats {
+  total: number;
+  completed: number;
+  inProgress: number;
+  notStarted: number;
+  progress: number;
+}
+
+export interface TodosResponse {
+  todos: Todo[];
+  totalPages: number;
+  currentPage: number;
+  total: number;
+  stats: TodoStats;
+}
+
+export interface PaginationParams {
+  page?: number;
+  limit?: number;
+  status?: TodoStatus;
+}
+
 export interface PaginationInfo {
   page: number;
   limit: number;
   total: number;
   totalPages: number;
+  hasNext: boolean;
+  hasPrev: boolean;
 }

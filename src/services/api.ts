@@ -1,10 +1,5 @@
 
-import { type Task, TaskStatus, type TaskFormData } from '../types/todo';
-
-interface ApiResponse<T> {
-  data: T;
-  message?: string;
-}
+import { type Todo, type TodoStatus, type TodoFormData, type PaginationParams, type TodosResponse, type TodoStats } from '../types/todo';
 
 class ApiError extends Error {
   constructor(status: number, message: string) {
@@ -33,6 +28,7 @@ class TodoApiService {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      credentials: 'include',
       ...options,
     };
 
@@ -54,12 +50,7 @@ class TodoApiService {
   }
 
   // Get all todos with optional filtering and pagination
-  async getTodos(params?: { status?: TaskStatus; page?: number; limit?: number }): Promise<{
-    todos: Task[];
-    totalPages: number;
-    currentPage: number;
-    total: number;
-  }> {
+  async getTodos(params?: PaginationParams): Promise<TodosResponse> {
     const queryParams = new URLSearchParams();
 
     if (params?.status) queryParams.append('status', params.status);
@@ -69,23 +60,23 @@ class TodoApiService {
     const queryString = queryParams.toString();
     const endpoint = `/tasks${queryString ? `?${queryString}` : ''}`;
 
-    return this.request(endpoint);
+    return this.request<TodosResponse>(endpoint);
   }
 
   // Create new todo
-  async createTodo(todoData: Omit<Task, 'createdAt' | 'updatedAt'>): Promise<Task> {
+  async createTodo(todoData: Omit<Todo, 'createdAt' | 'updatedAt'>): Promise<Todo> {
     return this.request('/tasks', {
       method: 'POST',
       body: JSON.stringify(todoData),
     });
   }
-  async updateTodo(id: string, updates: Partial<TaskFormData>): Promise<Task> {
+  async updateTodo(id: string, updates: Partial<TodoFormData>): Promise<Todo> {
     return this.request(`/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
   }
-  async updateTodoStatus(id: string, status: TaskStatus): Promise<Task> {
+  async updateTodoStatus(id: string, status: TodoStatus): Promise<{ todo: Todo, stats: TodoStats }> {
     return this.request(`/tasks/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
