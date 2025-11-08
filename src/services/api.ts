@@ -79,6 +79,27 @@ class TodoApiService {
       body: JSON.stringify(todoData),
     });
   }
+  async updateTodo(id: string, updates: Partial<TaskFormData>): Promise<Task> {
+    return this.request(`/tasks/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(updates),
+    });
+  }
+  async updateTodoStatus(id: string, status: TaskStatus): Promise<Task> {
+    return this.request(`/tasks/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+
+  // Delete todo
+  async deleteTodo(id: string): Promise<{ message: string }> {
+    return this.request(`/tasks/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
 }
 
 

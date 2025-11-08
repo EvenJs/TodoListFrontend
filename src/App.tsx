@@ -5,26 +5,47 @@ import { useTodos } from "./hooks/useTodos";
 import TodoForm from "./components/TodoForm";
 import TodoItem from "./components/TodoItem";
 import TodoStats from "./components/TodoStats";
-// import TodoFilter from "./components/TodoFilter";
+import TodoFilter from "./components/TodoFilter";
+import type { TaskFormData, TaskStatus } from "./types/todo";
 
 function App() {
-  const { todos, loading, addTodo } = useTodos();
+  const {
+    todos,
+    loading,
+    addTodo,
+    deleteTodo,
+    updateTodo,
+    updateTodoStatus,
+    refetch,
+  } = useTodos();
   const [filter, setFilter] = useState<string>("all");
 
-  const handleAddTodo = (title, description) => {
+  const filteredTodos = useMemo(() => {
+    if (filter === "all") return todos;
+    return todos.filter((todo) => todo.status === filter);
+  }, [todos, filter]);
+
+  const handleAddTodo = (title: string, description: string) => {
     addTodo(title, description);
   };
 
-  const handleStatusUpdate = (id, status) => {
+  const handleStatusUpdate = (id: string, status: TaskStatus) => {
     updateTodoStatus(id, status);
   };
 
-  const handleDeleteTodo = (id) => {
+  const handleDeleteTodo = (id: string) => {
     deleteTodo(id);
   };
 
-  const handleUpdateTodo = (id, updates) => {
+  const handleUpdateTodo = (id: string, updates: Partial<TaskFormData>) => {
     updateTodo(id, updates);
+  };
+
+  const handleFilterChange = async (newFilter: string) => {
+    setFilter(newFilter);
+    const params =
+      newFilter === "all" ? {} : { status: newFilter as TaskStatus };
+    await refetch(params);
   };
 
   if (loading && todos.length === 0) {
@@ -78,12 +99,13 @@ function App() {
           <TodoForm onSubmit={handleAddTodo} />
 
           {/* Filters */}
-          {/* TODO add filters */}
+
+          <TodoFilter filter={filter} onFilterChange={handleFilterChange} />
 
           {/* Todo List */}
           <div className="space-y-4">
             <AnimatePresence mode="popLayout">
-              {todos.map((todo) => (
+              {filteredTodos.map((todo) => (
                 <TodoItem
                   key={todo._id}
                   todo={todo}
@@ -95,7 +117,7 @@ function App() {
             </AnimatePresence>
 
             {/* Empty State */}
-            {todos.length === 0 && !loading && (
+            {filteredTodos.length === 0 && !loading && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}

@@ -68,6 +68,7 @@ export const useTodos = (): UseTodosReturn => {
       setLoading(false);
     }
   };
+
   const addTodo = async (
     title: string,
     description: string = ""
@@ -88,41 +89,52 @@ export const useTodos = (): UseTodosReturn => {
     }
   };
 
-  // Load initial mock data
+  const updateTodo = async (
+    id: string,
+    todoData: Partial<TaskFormData>
+  ): Promise<void> => {
+    try {
+      await todoApiService.updateTodo(id, todoData);
+      await fetchTodos(); // Refresh the list
+    } catch (err) {
+      throw new Error(err.response?.data?.error || "Failed to update todo");
+    }
+  };
+
+  const updateTodoStatus = async (id: string, status: TaskStatus) => {
+    try {
+      const updatedTodo = await todoApiService.updateTodoStatus(id, status);
+      setTodos((prev) =>
+        prev.map((todo) =>
+          todo._id === id ? { ...todo, ...updatedTodo } : todo
+        )
+      );
+    } catch (err) {
+      setError("Failed to update todo");
+      throw err;
+    }
+  };
+
+  const deleteTodo = async (id: string) => {
+    try {
+      await todoApiService.deleteTodo(id);
+      await fetchTodos(); // Refresh the list
+    } catch (err) {
+      throw new Error(err.response?.data?.error || "Failed to delete todo");
+    }
+  };
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  const updateTodoStatus = (id: string, status: TaskStatus) => {
-    setTodos((prev) =>
-      prev.map((todo) =>
-        todo._id === id
-          ? { ...todo, status, updatedAt: new Date().toISOString() }
-          : todo
-      )
-    );
-  };
-
-  const deleteTodo = (id: string) => {
-    setTodos((prev) => prev.filter((todo) => todo._id !== id));
-  };
-
-  const updateTodo = (id: string, updates: Partial<TaskFormData>) => {
-    setTodos((prev) =>
-      prev.map((todo) =>
-        todo._id === id
-          ? { ...todo, ...updates, updatedAt: new Date().toISOString() }
-          : todo
-      )
-    );
-  };
-
   return {
     todos,
     loading,
+    refetch: fetchTodos,
     addTodo,
-    updateTodoStatus,
     deleteTodo,
+    updateTodoStatus,
     updateTodo,
   };
 };
