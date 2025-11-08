@@ -2,10 +2,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2, Check, Clock, Play, Save, X } from "lucide-react";
 import { STATUS_CONFIG, TODO_STATUS } from "../constants/todo";
-import { type Todo, type TodoStatus, type TodoFormData } from "../types/todo";
+import {
+  type ExistingTodo,
+  type TodoStatus,
+  type TodoFormData,
+} from "../types/todo";
 
 interface TodoItemProps {
-  todo: Todo;
+  todo: ExistingTodo;
   onUpdate: (id: string, updates: Partial<TodoFormData>) => void;
   onDelete: (id: string) => void;
   onStatusUpdate: (id: string, status: TodoStatus) => void;
@@ -142,7 +146,7 @@ const TodoItem = ({
                 <button
                   onClick={handleStatusUpdate}
                   disabled={isUpdatingStatus}
-                  className={`flex-shrink-0 w-6 h-6 rounded-full border-2 mt-1 transition-all duration-200 hover:scale-110 flex items-center justify-center ${
+                  className={`shrink-0 w-6 h-6 rounded-full border-2 mt-1 transition-all duration-200 hover:scale-110 flex items-center justify-center ${
                     todo.status === TODO_STATUS.COMPLETED
                       ? "bg-green-500 border-green-500 text-white"
                       : "border-gray-300 hover:border-blue-500"
@@ -157,7 +161,7 @@ const TodoItem = ({
 
                 <div className="flex-1 min-w-0">
                   <h3
-                    className={`text-lg font-semibold text-gray-900 break-words ${
+                    className={`text-lg font-semibold text-gray-900 wrap-break-word ${
                       todo.status === TODO_STATUS.COMPLETED
                         ? "line-through text-gray-500"
                         : ""
@@ -167,7 +171,7 @@ const TodoItem = ({
                   </h3>
 
                   {todo.description && (
-                    <p className="text-gray-600 mt-2 break-words">
+                    <p className="text-gray-600 mt-2 wrap-break-word">
                       {todo.description}
                     </p>
                   )}
@@ -196,7 +200,7 @@ const TodoItem = ({
         </div>
 
         {!isEditing && (
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="flex items-center gap-1 shrink-0">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}

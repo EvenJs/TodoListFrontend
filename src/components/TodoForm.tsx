@@ -5,9 +5,10 @@ import { Plus, X } from "lucide-react";
 interface TodoFormProps {
   onSubmit: (title: string, description: string) => void;
   loading?: boolean;
+  onCancel?: () => void;
 }
 
-const TodoForm = ({ onSubmit, loading = false }: TodoFormProps) => {
+const TodoForm = ({ onSubmit, loading = false, onCancel }: TodoFormProps) => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -110,13 +111,15 @@ const TodoForm = ({ onSubmit, loading = false }: TodoFormProps) => {
                   <Plus className="w-4 h-4 mr-2" />
                   Create Task
                 </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="btn btn-ghost"
-                >
-                  Cancel
-                </button>
+                {onCancel && (
+                  <button
+                    type="button"
+                    onClick={onCancel}
+                    className="btn btn-ghost"
+                  >
+                    Cancel
+                  </button>
+                )}
               </div>
             </form>
           </motion.div>

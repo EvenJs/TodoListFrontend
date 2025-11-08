@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import {
-  type Todo,
+  type ExistingTodo,
   type TodoStatus,
   type TodoFormData,
   type PaginationInfo,
@@ -11,7 +11,7 @@ import { TODO_STATUS } from "../constants/todo";
 import { todoApiService } from "../services/api";
 
 interface UseTodos {
-  todos: Todo[];
+  todos: ExistingTodo[];
   loading: boolean;
   error: string | null;
   stats: TodoStats;
@@ -30,7 +30,7 @@ interface UseTodos {
 }
 
 export const useTodos = (): UseTodos => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<ExistingTodo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<TodoStats>({

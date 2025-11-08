@@ -1,8 +1,7 @@
 export type TodoStatus = 'not_started' | 'in_progress' | 'completed';
 
 
-export interface Todo {
-  _id?: string;
+export interface NewTodo {
   title: string;
   status: TodoStatus;
   description: string;
@@ -10,6 +9,9 @@ export interface Todo {
   updatedAt?: string;
 }
 
+export interface ExistingTodo extends NewTodo {
+  _id: string; // required once saved
+}
 export interface TodoFormData {
   title: string;
   description: string;
@@ -30,7 +32,7 @@ export interface TodoStats {
 }
 
 export interface TodosResponse {
-  todos: Todo[];
+  todos: ExistingTodo[];
   totalPages: number;
   currentPage: number;
   total: number;
@@ -50,4 +52,11 @@ export interface PaginationInfo {
   totalPages: number;
   hasNext: boolean;
   hasPrev: boolean;
+}
+
+export interface KanbanColumn {
+  id: TodoStatus;
+  title: string;
+  color: string;
+  todos: ExistingTodo[];
 }

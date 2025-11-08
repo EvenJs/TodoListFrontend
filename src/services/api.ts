@@ -1,5 +1,5 @@
 
-import { type Todo, type TodoStatus, type TodoFormData, type PaginationParams, type TodosResponse, type TodoStats } from '../types/todo';
+import { type TodoStatus, type TodoFormData, type PaginationParams, type TodosResponse, type TodoStats, type NewTodo, type ExistingTodo } from '../types/todo';
 
 class ApiError extends Error {
   constructor(status: number, message: string) {
@@ -64,19 +64,19 @@ class TodoApiService {
   }
 
   // Create new todo
-  async createTodo(todoData: Omit<Todo, 'createdAt' | 'updatedAt'>): Promise<Todo> {
+  async createTodo(todoData: Omit<NewTodo, 'createdAt' | 'updatedAt'>): Promise<ExistingTodo> {
     return this.request('/tasks', {
       method: 'POST',
       body: JSON.stringify(todoData),
     });
   }
-  async updateTodo(id: string, updates: Partial<TodoFormData>): Promise<Todo> {
+  async updateTodo(id: string, updates: Partial<TodoFormData>): Promise<ExistingTodo> {
     return this.request(`/tasks/${id}`, {
       method: 'PUT',
       body: JSON.stringify(updates),
     });
   }
-  async updateTodoStatus(id: string, status: TodoStatus): Promise<{ todo: Todo, stats: TodoStats }> {
+  async updateTodoStatus(id: string, status: TodoStatus): Promise<{ todo: ExistingTodo, stats: TodoStats }> {
     return this.request(`/tasks/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
