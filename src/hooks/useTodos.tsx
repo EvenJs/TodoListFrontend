@@ -1,22 +1,22 @@
 import { useState, useEffect } from "react";
 import {
-  type Task,
-  TaskStatus,
-  type TaskFormData,
+  type Todo,
+  TodoStatus,
+  type TodoFormData,
   type PaginationInfo,
 } from "../types/todo";
 import { todoApiService } from "../services/api";
 
 interface UseTodosReturn {
-  todos: Task[];
+  todos: Todo[];
   loading: boolean;
   error: string | null;
   addTodo: (title: string, description?: string) => void;
-  updateTodoStatus: (id: string, status: TaskStatus) => void;
+  updateTodoStatus: (id: string, status: TodoStatus) => void;
   deleteTodo: (id: string) => void;
-  updateTodo: (id: string, updates: Partial<TaskFormData>) => void;
+  updateTodo: (id: string, updates: Partial<TodoFormData>) => void;
   refetch: (params?: {
-    status?: TaskStatus;
+    status?: TodoStatus;
     page?: number;
     limit?: number;
   }) => Promise<void>;
@@ -24,7 +24,7 @@ interface UseTodosReturn {
 }
 
 export const useTodos = (): UseTodosReturn => {
-  const [todos, setTodos] = useState<Task[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +36,7 @@ export const useTodos = (): UseTodosReturn => {
   });
 
   const fetchTodos = async (params?: {
-    status?: TaskStatus;
+    status?: TodoStatus;
     page?: number;
     limit?: number;
   }) => {
@@ -78,7 +78,7 @@ export const useTodos = (): UseTodosReturn => {
       await todoApiService.createTodo({
         title,
         description,
-        status: TaskStatus.NOT_STARTED,
+        status: TodoStatus.NOT_STARTED,
       });
       await fetchTodos(); // Refresh the list
     } catch (err) {
@@ -91,7 +91,7 @@ export const useTodos = (): UseTodosReturn => {
 
   const updateTodo = async (
     id: string,
-    todoData: Partial<TaskFormData>
+    todoData: Partial<TodoFormData>
   ): Promise<void> => {
     try {
       await todoApiService.updateTodo(id, todoData);
@@ -101,7 +101,7 @@ export const useTodos = (): UseTodosReturn => {
     }
   };
 
-  const updateTodoStatus = async (id: string, status: TaskStatus) => {
+  const updateTodoStatus = async (id: string, status: TodoStatus) => {
     try {
       const updatedTodo = await todoApiService.updateTodoStatus(id, status);
       setTodos((prev) =>

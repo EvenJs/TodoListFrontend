@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Edit3, Trash2, Check, Clock, Play, Save, X } from "lucide-react";
-import { STATUS_CONFIG, TASK_STATUS } from "../constants/todo";
-import { type Task, TaskStatus, type TaskFormData } from "../types/todo";
+import { STATUS_CONFIG, TODO_STATUS } from "../constants/todo";
+import { type Todo, TodoStatus, type TodoFormData } from "../types/todo";
 
 interface TodoItemProps {
-  todo: Task;
-  onUpdate: (id: string, updates: Partial<TaskFormData>) => void;
+  todo: Todo;
+  onUpdate: (id: string, updates: Partial<TodoFormData>) => void;
   onDelete: (id: string) => void;
-  onStatusUpdate: (id: string, status: TaskStatus) => void;
+  onStatusUpdate: (id: string, status: TodoStatus) => void;
 }
 
 const TodoItem = ({
@@ -38,29 +38,29 @@ const TodoItem = ({
     setIsEditing(false);
   };
 
-  const getStatusIcon = (status: TaskStatus) => {
+  const getStatusIcon = (status: TodoStatus) => {
     switch (status) {
-      case TASK_STATUS.NOT_STARTED:
+      case TodoStatus.NOT_STARTED:
         return <Clock className="w-3 h-3" />;
-      case TASK_STATUS.IN_PROGRESS:
+      case TodoStatus.IN_PROGRESS:
         return <Play className="w-3 h-3" />;
-      case TASK_STATUS.COMPLETED:
+      case TodoStatus.COMPLETED:
         return <Check className="w-3 h-3" />;
       default:
         return <Clock className="w-3 h-3" />;
     }
   };
 
-  const getNextStatus = (currentStatus: TaskStatus): TaskStatus => {
+  const getNextStatus = (currentStatus: TodoStatus): TodoStatus => {
     switch (currentStatus) {
-      case TASK_STATUS.NOT_STARTED:
-        return TASK_STATUS.IN_PROGRESS;
-      case TASK_STATUS.IN_PROGRESS:
-        return TASK_STATUS.COMPLETED;
-      case TASK_STATUS.COMPLETED:
-        return TASK_STATUS.NOT_STARTED;
+      case TodoStatus.NOT_STARTED:
+        return TodoStatus.IN_PROGRESS;
+      case TodoStatus.IN_PROGRESS:
+        return TodoStatus.COMPLETED;
+      case TodoStatus.COMPLETED:
+        return TodoStatus.NOT_STARTED;
       default:
-        return TASK_STATUS.NOT_STARTED;
+        return TodoStatus.NOT_STARTED;
     }
   };
 
@@ -72,7 +72,7 @@ const TodoItem = ({
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
       className={`todo-card ${
-        todo.status === TASK_STATUS.COMPLETED ? "opacity-75" : ""
+        todo.status === TODO_STATUS.COMPLETED ? "opacity-75" : ""
       }`}
     >
       <div className="flex items-start justify-between gap-4">
@@ -122,12 +122,12 @@ const TodoItem = ({
                     onStatusUpdate(todo._id, getNextStatus(todo.status))
                   }
                   className={`flex-shrink-0 w-6 h-6 rounded-full border-2 mt-1 transition-all duration-200 hover:scale-110 ${
-                    todo.status === TASK_STATUS.COMPLETED
+                    todo.status === TODO_STATUS.COMPLETED
                       ? "bg-success-500 border-success-500 text-white"
                       : "border-gray-300 hover:border-primary-500"
                   }`}
                 >
-                  {todo.status === TASK_STATUS.COMPLETED && (
+                  {todo.status === TODO_STATUS.COMPLETED && (
                     <Check className="w-3 h-3 mx-auto" />
                   )}
                 </button>
@@ -135,7 +135,7 @@ const TodoItem = ({
                 <div className="flex-1 min-w-0">
                   <h3
                     className={`text-lg font-semibold text-gray-900 break-words ${
-                      todo.status === TASK_STATUS.COMPLETED
+                      todo.status === TODO_STATUS.COMPLETED
                         ? "line-through text-gray-500"
                         : ""
                     }`}

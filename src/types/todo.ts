@@ -1,22 +1,22 @@
-export const TaskStatus = {
+export const TodoStatus = {
   NOT_STARTED: "not_started",
   IN_PROGRESS: "in_progress",
   COMPLETED: "completed",
 } as const;
 
-export type TaskStatus = typeof TaskStatus[keyof typeof TaskStatus];
+export type TodoStatus = typeof TodoStatus[keyof typeof TodoStatus];
 
 
-export interface Task {
+export interface Todo {
   _id?: string;
   title: string;
-  status: TaskStatus;
+  status: TodoStatus;
   description: string;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface TaskFormData {
+export interface TodoFormData {
   title: string;
   description: string;
 }

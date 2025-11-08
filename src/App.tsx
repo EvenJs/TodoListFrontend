@@ -6,7 +6,7 @@ import TodoForm from "./components/TodoForm";
 import TodoItem from "./components/TodoItem";
 import TodoStats from "./components/TodoStats";
 import TodoFilter from "./components/TodoFilter";
-import type { TaskFormData, TaskStatus } from "./types/todo";
+import type { TodoFormData, TodoStatus } from "./types/todo";
 
 function App() {
   const {
@@ -29,7 +29,7 @@ function App() {
     addTodo(title, description);
   };
 
-  const handleStatusUpdate = (id: string, status: TaskStatus) => {
+  const handleStatusUpdate = (id: string, status: TodoStatus) => {
     updateTodoStatus(id, status);
   };
 
@@ -37,14 +37,14 @@ function App() {
     deleteTodo(id);
   };
 
-  const handleUpdateTodo = (id: string, updates: Partial<TaskFormData>) => {
+  const handleUpdateTodo = (id: string, updates: Partial<TodoFormData>) => {
     updateTodo(id, updates);
   };
 
   const handleFilterChange = async (newFilter: string) => {
     setFilter(newFilter);
     const params =
-      newFilter === "all" ? {} : { status: newFilter as TaskStatus };
+      newFilter === "all" ? {} : { status: newFilter as TodoStatus };
     await refetch(params);
   };
 
@@ -144,7 +144,7 @@ function App() {
           transition={{ delay: 0.5 }}
           className="text-center mt-16 pt-8 border-t border-white/20"
         >
-          Footer for Todoist App - Made with ❤️ by Yuhang Wang
+          Footer for Todoist App - Made by Yuhang Wang
         </motion.footer>
       </div>
     </div>

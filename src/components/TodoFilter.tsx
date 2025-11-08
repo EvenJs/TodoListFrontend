@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Filter } from "lucide-react";
-import { TaskStatus } from "../types/todo";
+import { TodoStatus } from "../types/todo";
 import { STATUS_OPTIONS } from "../constants/todo";
 
 interface TodoFilterProps {
@@ -39,9 +39,9 @@ const TodoFilter = ({ filter, onFilterChange }: TodoFilterProps) => {
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
               filter === option.value
                 ? `${
-                    option.value === TaskStatus.NOT_STARTED
+                    option.value === TodoStatus.NOT_STARTED
                       ? "bg-amber-100 text-amber-600 border-amber-200"
-                      : option.value === TaskStatus.IN_PROGRESS
+                      : option.value === TodoStatus.IN_PROGRESS
                       ? "bg-blue-100 text-blue-600 border-blue-200"
                       : "bg-green-100 text-green-600 border-green-200"
                   } shadow-md`
