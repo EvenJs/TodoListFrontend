@@ -86,3 +86,5 @@ docker compose up --build
 - Add tests
 - create develop branch and generate pull request to merge into master branch to make project safe.
 - improve user experience
+- Shared types between frontend and backend
+- For Kanban view didn't implement pagination but using same endpoint with list view (default limit 10)
