@@ -96,7 +96,7 @@ export const useTodos = (): UseTodos => {
 
   const addTodo = async (
     title: string,
-    description: string = ""
+    description: string = "",
   ): Promise<void> => {
     try {
       setError(null);
@@ -116,7 +116,7 @@ export const useTodos = (): UseTodos => {
 
   const updateTodo = async (
     id: string,
-    todoData: Partial<TodoFormData>
+    todoData: Partial<TodoFormData>,
   ): Promise<void> => {
     try {
       await todoApiService.updateTodo(id, todoData);
@@ -130,7 +130,7 @@ export const useTodos = (): UseTodos => {
 
   const updateTodoStatus = async (
     id: string,
-    status: TodoStatus
+    status: TodoStatus,
   ): Promise<void> => {
     try {
       setError(null);
@@ -140,8 +140,8 @@ export const useTodos = (): UseTodos => {
         prev.map((todo) =>
           todo._id === id
             ? { ...updatedTodo.todo, id: updatedTodo.todo._id }
-            : todo
-        )
+            : todo,
+        ),
       );
       setStats(updatedTodo.stats);
     } catch (err) {

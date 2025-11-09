@@ -1,5 +1,4 @@
-export type TodoStatus = 'not_started' | 'in_progress' | 'completed';
-
+export type TodoStatus = "not_started" | "in_progress" | "completed";
 
 export interface NewTodo {
   title: string;

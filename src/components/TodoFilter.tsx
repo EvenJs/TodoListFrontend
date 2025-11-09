@@ -52,8 +52,8 @@ const TodoFilter = ({
                     option.value === TODO_STATUS.NOT_STARTED
                       ? "bg-amber-100 text-amber-600 border-amber-200"
                       : option.value === TODO_STATUS.IN_PROGRESS
-                      ? "bg-blue-100 text-blue-600 border-blue-200"
-                      : "bg-green-100 text-green-600 border-green-200"
+                        ? "bg-blue-100 text-blue-600 border-blue-200"
+                        : "bg-green-100 text-green-600 border-green-200"
                   } shadow-md`
                 : "bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200"
             }`}

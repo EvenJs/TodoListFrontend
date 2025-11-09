@@ -46,7 +46,7 @@ const KanbanCard = ({
       exit={{ opacity: 0, scale: 0.9 }}
       whileHover={{ y: -2 }}
       className={`bg-white rounded-lg shadow-sm border border-gray-200 ${getStatusColor(
-        todo.status
+        todo.status,
       )} border-l-4 p-4 hover:shadow-md transition-all duration-200 cursor-grab active:cursor-grabbing`}
     >
       <div className="flex justify-between items-start mb-2">
@@ -94,7 +94,7 @@ const KanbanCard = ({
                     >
                       {column.title}
                     </button>
-                  )
+                  ),
               )}
 
               <div className="border-t border-gray-200 my-1"></div>

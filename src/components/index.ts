@@ -8,7 +8,6 @@ import ListView from "./ListView";
 import ErrorBoundary from "./ErrorBoundary";
 import ViewSwitcher from "./ViewSwitcher";
 
-
 export {
   TodoStats,
   TodoFilters,
@@ -19,4 +18,4 @@ export {
   ListView,
   ErrorBoundary,
   ViewSwitcher,
-}
+};
