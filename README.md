@@ -35,24 +35,26 @@ ensure installed
 
 ## Project Structure
 
+```
 src/
-├── components/ # React components
-│ ├── KanbanView.tsx # Kanban board component
-│ ├── ListView.tsx # List view component
-│ ├── TodoForm.tsx # Task creation form
-│ ├── TodoStats.tsx # Statistics dashboard
-│ └── ...
-├── contexts/ # React contexts
-│ ├── TodoContext.ts # Todo state management
-│ └── ViewContext.ts # UI view state
-├── hooks/ # Custom React hooks
-│ └── useTodos.ts # Todo data management
-├── services/ # API services
-│ └── api.ts # HTTP client configuration
-├── types/ # TypeScript type definitions
-│ └── todo.ts # Todo-related types
-└── constants/ # Application constants
-└── todo.ts # Status constants and configurations
+├── 📦 components/          # React Components
+│   ├── KanbanView.tsx     # Kanban Board Component
+│   ├── ListView.tsx       # List View Component
+│   ├── TodoForm.tsx       # Task Creation & Edit Form
+│   ├── TodoStats.tsx      # Statistics Dashboard
+│   └── ...                # Additional Components
+├── 🎯 contexts/           # React Contexts
+│   ├── TodoContext.ts     # Todo State Management
+│   └── ViewContext.ts     # UI View State Management
+├── 🪝 hooks/              # Custom React Hooks
+│   └── useTodos.ts        # Todo Data Management Hook
+├── 🔌 services/           # API Services
+│   └── api.ts             # HTTP Client Configuration
+├── 📐 types/              # TypeScript Type Definitions
+│   └── todo.ts            # Todo-Related Type Definitions
+└── 🔧 constants/          # Application Constants
+    └── todo.ts            # Status Constants & Configurations
+```
 
 ## Install Dependencies
 
